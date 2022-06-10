@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package org.wcode.proto.quotemanagement;
+option go_package = "github.com/wcodesoft/quote-management-service/grpc/go/quote-management.proto";
+
+// Phrases definition
+// Next ID: 5
+message Phrase {
+  optional string uuid = 1;
+  string code = 2;
+  string phrase = 3;
+  string quoteId = 4;
+}
+
+// Quote definition
+// Next ID: 5
+message Quote {
+  optional string uuid = 1;
+  string authorId = 2;
+  int64 timestamp = 3;
+  repeated Phrase phrases = 4;
+}
+
+message RequestId {
+  string uuid = 1;
+}
+
+message Response {
+  bool success = 1;
+}
+
+message GetQuotesResponse {
+  repeated Quote quotes = 1;
+}
+
+service QuoteManagement{
+
+  // Create a new Quote entry on the service.
+  rpc CreateQuote(Quote) returns (Response);
+
+  // Update Quote by the uuid if they exist in the system.
+  rpc UpdateQuote(Quote) returns (Response);
+
+  // Try to delete Quote if it exists on the system.
+  rpc DeleteQuote(RequestId) returns (Response);
+
+  // Get all Quotes from service.
+  rpc GetQuotes(google.protobuf.Empty) returns (GetQuotesResponse);
+
+  // Get Quote by uuid if they exist in the system.
+  rpc GetQuote(RequestId) returns (Quote);
+}
